@@ -31,5 +31,4 @@ jobs:
       - name: Build and Test
         run: mvn clean install -Dspring.datasource.url=jdbc:mysql://localhost:3306/test_db -Dspring.datasource.username=root -Dspring.datasource.password=root_password
 
-      - name: Run Application
-        run: java -jar target/your-app.jar
+
