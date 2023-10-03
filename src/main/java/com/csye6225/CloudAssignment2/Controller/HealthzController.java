@@ -1,5 +1,6 @@
 package com.csye6225.CloudAssignment2.Controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -19,13 +20,17 @@ public class HealthzController {
     @Autowired
     private JdbcTemplate jdbctemplate;
 
+    @Autowired
+    private HttpServletRequest request;
+
     @GetMapping()
-    public ResponseEntity<Void> hello(@RequestBody(required=false)Object body) {
+    public ResponseEntity<Void> hello(@RequestBody(required=false)Object body
+    ) {
         HttpHeaders headers;
         headers=new HttpHeaders();
         headers.set("Pragma", "no-cache");
         headers.set("X-Content-Type-Options","nosniff");
-        if(body!=null){
+        if(body!=null || request.getQueryString()!= null){
             return ResponseEntity.status(400).cacheControl(CacheControl.noCache().mustRevalidate()).headers(headers).build();
         }
         try {
