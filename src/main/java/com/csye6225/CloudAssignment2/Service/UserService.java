@@ -19,9 +19,9 @@ import java.util.List;
 public class UserService {
 
     @Autowired
-    private static UserRepository userRepository;
+    private UserRepository userRepository;
 
-    public static void LoadUsersFromCSV(String filepath){
+    public void LoadUsersFromCSV(String filepath){
         List<String[]> csvData= parseCSV(filepath);
 
         for(String[] userData:csvData){
@@ -30,7 +30,7 @@ public class UserService {
             String email=userData[2];
             String password=userData[3];
 
-            User existing=userRepository.findByUsername(email);
+            User existing=userRepository.findByEmail(email);
             if(existing==null){
                 User user=new User();
                 user.setFirstname(firstname);
@@ -50,6 +50,7 @@ public class UserService {
         try{
             BufferedReader br= new BufferedReader(new FileReader(filepath));
             String line;
+            br.readLine();
             while((line= br.readLine())!=null){
            String[] val=line.split(",");
             values.add(val);
