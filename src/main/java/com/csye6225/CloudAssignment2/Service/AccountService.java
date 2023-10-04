@@ -1,22 +1,27 @@
 package com.csye6225.CloudAssignment2.Service;
 
+import com.csye6225.CloudAssignment2.Controller.AssignmentController;
 import com.csye6225.CloudAssignment2.Model.Account;
+import com.csye6225.CloudAssignment2.Model.Assignment;
 import com.csye6225.CloudAssignment2.Repository.AccountRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCrypt;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InvalidObjectException;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @Slf4j
@@ -25,6 +30,8 @@ public class AccountService {
     @Autowired
     private AccountRepository userRepository;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
     public void LoadUsersFromCSV(String filepath) {
         List<String[]> csvData = parseCSV(filepath);
 
@@ -55,8 +62,12 @@ public class AccountService {
                 user.setFirstname(firstname);
                 user.setLastname(lastname);
                 user.setEmail(email);
+                user.setAccountUpdated(Date.valueOf(LocalDate.now()));
                 user.setAccountCreated(Date.valueOf(LocalDate.now()));
-                String hashpassword = BCrypt.hashpw(password, BCrypt.gensalt());
+
+
+                String hashpassword=passwordEncoder.encode(password);
+//
                 user.setPassword(hashpassword);
                 userRepository.save(user);
 
@@ -93,6 +104,11 @@ public class AccountService {
     private static boolean isValidEmail(String email) {
         String regex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$";
         return email.matches(regex);
+    }
+
+    public Account findById(UUID id){
+        return userRepository.findById(id).orElse(null);
+
     }
 
 
