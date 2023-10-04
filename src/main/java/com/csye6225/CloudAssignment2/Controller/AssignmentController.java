@@ -7,8 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.Date;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,13 +17,19 @@ public class AssignmentController {
     @Autowired
     private AssignmentService assignmentService;
     @PostMapping()
-    public Assignment createAssignment(@RequestBody Assignment assignment){
+    public ResponseEntity<?> createAssignment(@RequestBody Assignment assignment){
 
-      return assignmentService.saveAssignment(assignment);
 
+        try {
+            Assignment savedAssignment = assignmentService.saveAssignment(assignment);
+            return ResponseEntity.ok(savedAssignment);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
     @GetMapping
     public List<Assignment> getAssignments() {
+
         return assignmentService.getAllAssignments();
     }
     @GetMapping("/{id}")
@@ -47,7 +51,7 @@ public class AssignmentController {
             Assignment assignment = existingAssignment.get();
             assignment.setName(updatedAssignment.getName());
             assignment.setPoints(updatedAssignment.getPoints());
-            assignment.setNumOfAttempts(updatedAssignment.getNumOfAttempts());
+            assignment.setNum_of_attempts(updatedAssignment.getNum_of_attempts());
             assignment.setDeadline(updatedAssignment.getDeadline());
 
             Assignment updated = assignmentService.saveAssignment(assignment);
@@ -58,12 +62,13 @@ public class AssignmentController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteAssignment(@PathVariable Long id) {
+    public ResponseEntity<String> deleteAssignment(@PathVariable Long id) {
         Optional<Assignment> existingAssignment = assignmentService.getAssignmentById(id);
 
         if (existingAssignment.isPresent()) {
             assignmentService.deleteAssignment(id);
-            return ResponseEntity.noContent().build();
+            return ResponseEntity.status(200).body("Successfully deleted Assignment with id:" + id);
+
         } else {
             return ResponseEntity.notFound().build();
         }

@@ -14,7 +14,7 @@ public class CloudAssignment2Application {
 
         AccountService userService = context.getBean(AccountService.class);
 
-        String filepath="opt/users.csv";
+        String filepath="/opt/users.csv";
         userService.LoadUsersFromCSV(filepath);
     }
 
