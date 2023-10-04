@@ -1,28 +1,27 @@
 package com.csye6225.CloudAssignment2.Service;
 
-import com.csye6225.CloudAssignment2.Model.User;
-import com.csye6225.CloudAssignment2.Repository.UserRepository;
+import com.csye6225.CloudAssignment2.Model.Account;
+import com.csye6225.CloudAssignment2.Repository.AccountRepository;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.annotations.SqlFragmentAlias;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Service;
 
 
-import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
 @Slf4j
-public class UserService {
+public class AccountService {
 
     @Autowired
-    private UserRepository userRepository;
+    private AccountRepository userRepository;
 
     public void LoadUsersFromCSV(String filepath){
         List<String[]> csvData= parseCSV(filepath);
@@ -48,12 +47,13 @@ public class UserService {
                 continue;
             }
 
-            User existing=userRepository.findByEmail(email);
+            Account existing=userRepository.findByEmail(email);
             if(existing==null){
-                User user=new User();
+                Account user=new Account();
                 user.setFirstname(firstname);
                 user.setLastname(lastname);
                 user.setEmail(email);
+                user.setAccountCreated(Date.valueOf(LocalDate.now()));
                 String hashpassword = new BCryptPasswordEncoder().encode(password);
                 user.setPassword(hashpassword);
                 userRepository.save(user);
