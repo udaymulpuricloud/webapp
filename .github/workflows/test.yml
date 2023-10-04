@@ -11,13 +11,15 @@ jobs:
 
     services:
       mysql:
-        image: mysql:latest
+        image: postgres:latest
         env:
-          MYSQL_ROOT_PASSWORD: Ud@R9603
-          MYSQL_DATABASE: Assignment2
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: Assignment2
         ports:
-          - 3306:3306
-        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+          - 5432:5432
+        options: -health-cmd="pg_isready -U postgres" --health-interval=10s --health-timeout=5s --health-retries=3
+
 
     steps:
       - name: Checkout Repository
