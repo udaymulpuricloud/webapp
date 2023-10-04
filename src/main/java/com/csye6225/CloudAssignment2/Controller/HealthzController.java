@@ -24,8 +24,7 @@ public class HealthzController {
     private HttpServletRequest request;
 
     @GetMapping()
-    public ResponseEntity<Void> hello(@RequestBody(required=false)Object body
-    ) {
+    public ResponseEntity<Void> hello(@RequestBody(required=false)Object body) {
         HttpHeaders headers;
         headers=new HttpHeaders();
         headers.set("Pragma", "no-cache");

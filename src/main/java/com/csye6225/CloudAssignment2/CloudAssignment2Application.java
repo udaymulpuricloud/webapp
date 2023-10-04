@@ -1,6 +1,6 @@
 package com.csye6225.CloudAssignment2;
 
-import com.csye6225.CloudAssignment2.Service.UserService;
+import com.csye6225.CloudAssignment2.Service.AccountService;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -12,7 +12,7 @@ public class CloudAssignment2Application {
 
         ConfigurableApplicationContext context = SpringApplication.run(CloudAssignment2Application.class, args);
 
-        UserService userService = context.getBean(UserService.class);
+        AccountService userService = context.getBean(AccountService.class);
 
         String filepath="opt/users.csv";
         userService.LoadUsersFromCSV(filepath);
