@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.Getter;
 
 import java.sql.Date;
+import java.util.Set;
 
 
 @Data
@@ -21,6 +22,9 @@ public class Account {
     private String password;
     private Date accountCreated;
     private Date accountUpdated;
+
+    @OneToMany(mappedBy = "createdBy", cascade = CascadeType.ALL)
+    private Set<Assignment> assignments;
 
 
 }

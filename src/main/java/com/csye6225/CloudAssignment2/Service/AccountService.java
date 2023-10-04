@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
 @Service
@@ -24,16 +25,16 @@ public class AccountService {
     @Autowired
     private AccountRepository userRepository;
 
-    public void LoadUsersFromCSV(String filepath){
-        List<String[]> csvData= parseCSV(filepath);
+    public void LoadUsersFromCSV(String filepath) {
+        List<String[]> csvData = parseCSV(filepath);
 
-        for(String[] userData:csvData){
-            String firstname=userData[0];
-            String lastname=userData[1];
-            String email=userData[2];
-            String password=userData[3];
+        for (String[] userData : csvData) {
+            String firstname = userData[0];
+            String lastname = userData[1];
+            String email = userData[2];
+            String password = userData[3];
 
-            if ((firstname.length()<4 && firstname.length() > 20) ||(lastname.length()<4&& lastname.length() > 10)) {
+            if ((firstname.length() < 4 && firstname.length() > 20) || (lastname.length() < 4 && lastname.length() > 10)) {
                 log.error("First name and last name must be betweenm 4 and 20 characters  for user with email: {}", email);
                 continue;
             }
@@ -48,39 +49,38 @@ public class AccountService {
                 continue;
             }
 
-            Account existing=userRepository.findByEmail(email);
-            if(existing==null){
-                Account user=new Account();
+            Account existing = userRepository.findByEmail(email);
+            if (existing == null) {
+                Account user = new Account();
                 user.setFirstname(firstname);
                 user.setLastname(lastname);
                 user.setEmail(email);
                 user.setAccountCreated(Date.valueOf(LocalDate.now()));
-                String hashpassword = BCrypt.hashpw(password,BCrypt.gensalt());
+                String hashpassword = BCrypt.hashpw(password, BCrypt.gensalt());
                 user.setPassword(hashpassword);
                 userRepository.save(user);
 
-            }
-            else
-                log.error("User already present in the database with mail id :{}",email);
+            } else
+                log.error("User already present in the database with mail id :{}", email);
         }
     }
 
     private static List<String[]> parseCSV(String filepath) {
-        List<String[]> values= new ArrayList<>();
+        List<String[]> values = new ArrayList<>();
 
-        try{
-            BufferedReader br= new BufferedReader(new FileReader(filepath));
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(filepath));
             String line;
             br.readLine();
-            while((line= br.readLine())!=null){
+            while ((line = br.readLine()) != null) {
 
-           String[] val=line.split(",");
+                String[] val = line.split(",");
 
-           if(val.length!=4){
-               log.error("Invalid data in CSV,Count is not equal to 4,{}",val.length);
-           }
+                if (val.length != 4) {
+                    log.error("Invalid data in CSV,Count is not equal to 4,{}", val.length);
+                }
 
-            values.add(val);
+                values.add(val);
 
             }
 
@@ -89,8 +89,11 @@ public class AccountService {
         }
         return values;
     }
+
     private static boolean isValidEmail(String email) {
-        String regex ="^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$";
+        String regex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$";
         return email.matches(regex);
-     }
+    }
+
+
 }
