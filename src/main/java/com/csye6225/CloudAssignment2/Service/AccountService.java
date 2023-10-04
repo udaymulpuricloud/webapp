@@ -4,6 +4,7 @@ import com.csye6225.CloudAssignment2.Model.Account;
 import com.csye6225.CloudAssignment2.Repository.AccountRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -54,7 +55,7 @@ public class AccountService {
                 user.setLastname(lastname);
                 user.setEmail(email);
                 user.setAccountCreated(Date.valueOf(LocalDate.now()));
-                String hashpassword = new BCryptPasswordEncoder().encode(password);
+                String hashpassword = BCrypt.hashpw(password,BCrypt.gensalt());
                 user.setPassword(hashpassword);
                 userRepository.save(user);
 

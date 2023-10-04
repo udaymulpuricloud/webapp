@@ -14,7 +14,7 @@ import java.sql.Date;
 public class Assignment {
     private String name;
     private int points;
-    private int numOfAttempts;
+    private int num_of_attempts;
     private Date deadline;
     private Date assignmentCreated;
     private Date assignmentUpdated;

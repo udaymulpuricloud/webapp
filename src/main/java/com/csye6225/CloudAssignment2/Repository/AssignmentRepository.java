@@ -7,5 +7,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface AssignmentRepository extends JpaRepository<Assignment, Long> {
+    boolean existsByName(String name);
     // You can add custom query methods here if needed
 }
