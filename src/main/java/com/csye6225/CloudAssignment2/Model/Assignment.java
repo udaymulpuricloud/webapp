@@ -1,10 +1,14 @@
 package com.csye6225.CloudAssignment2.Model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
+
+
 import java.sql.Date;
+import java.util.UUID;
 
 
 @Data
@@ -24,9 +28,12 @@ public class Assignment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private UUID id;
+
 
     @ManyToOne
+    @JsonIgnore
     private Account createdBy;
+
 
 }
