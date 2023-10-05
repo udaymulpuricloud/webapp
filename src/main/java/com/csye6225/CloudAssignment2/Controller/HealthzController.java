@@ -34,6 +34,7 @@ public class HealthzController {
         }
         try {
             jdbctemplate.queryForObject("Select 1", Integer.class);
+
             return ResponseEntity.status(200).cacheControl(CacheControl.noCache().mustRevalidate()).headers(headers).build();
 
 
@@ -43,7 +44,14 @@ public class HealthzController {
     }
 
 
-
+    public boolean isDatabaseConnected() {
+        try {
+            jdbctemplate.queryForObject("SELECT 1", Integer.class);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
 
 }
 
