@@ -41,20 +41,12 @@ public class AccountService {
             String email = userData[2];
             String password = userData[3];
 
-            if ((firstname.length() < 4 && firstname.length() > 20) || (lastname.length() < 4 && lastname.length() > 10)) {
-                log.error("First name and last name must be betweenm 4 and 20 characters  for user with email: {}", email);
-                continue;
-            }
+
             if (!isValidEmail(email)) {
                 log.error("Invalid email format for user with email: {}", email);
                 continue;
             }
 
-
-            if (password.length() < 8) {
-                log.error("Password must be at least 8 characters long for user with email: {}", email);
-                continue;
-            }
 
             Account existing = userRepository.findByEmail(email);
             if (existing == null) {
@@ -110,6 +102,4 @@ public class AccountService {
         return userRepository.findById(id).orElse(null);
 
     }
-
-
 }

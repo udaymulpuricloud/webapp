@@ -29,7 +29,7 @@ public class AssignmentService {
 
     @Autowired
     private AssignmentRepository assignmentRepository;
-    public Assignment saveAssignment(Assignment assignment){
+    public Assignment saveAssignment(Assignment assignment) {
 
         assignment.setAssignmentUpdated(Date.valueOf(LocalDate.now()));
         assignment.setAssignmentCreated(Date.valueOf(LocalDate.now()));
@@ -37,12 +37,13 @@ public class AssignmentService {
         if(points < 1 || points > 10){
             throw new IllegalArgumentException("Points should be between 1 and 10");
         }
+        int numAttempts = assignment.getNum_of_attempts();
+        if(numAttempts < 1 || numAttempts > 10){
+            throw new IllegalArgumentException("Points should be between 1 and 10");
+        }
         String assignmentName = assignment.getName();
         if (assignmentName.isEmpty() || assignmentName.isEmpty()||assignmentName.trim().isEmpty()) {
             throw new IllegalArgumentException("Assignment name cannot be empty");
-        }
-        if (assignmentRepository.existsByName(assignmentName)) {
-            throw new IllegalArgumentException("Assignment with the same name already exists");
         }
         UUID id = (UUID) request.getSession().getAttribute("accountId");
         assignment.setCreatedBy(accountService.findById(id));
