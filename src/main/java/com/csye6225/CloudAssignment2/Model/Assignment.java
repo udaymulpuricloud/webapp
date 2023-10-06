@@ -2,12 +2,14 @@ package com.csye6225.CloudAssignment2.Model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Data;
 
 
 
 import java.sql.Date;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 
@@ -18,13 +20,22 @@ public class Assignment {
     private int points;
     private int num_of_attempts;
 
-    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", timezone = "UTC")
-    private Date deadline;
+    @Column
+    @Temporal(TemporalType.TIMESTAMP)
+    @JsonFormat(pattern="yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+    private LocalDateTime deadline;
 
-    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", timezone = "UTC")
-    private Date assignmentCreated;
-    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", timezone = "UTC")
-    private Date assignmentUpdated;
+    @Column
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    @Temporal(TemporalType.TIMESTAMP)
+    @JsonFormat(pattern="yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+    private LocalDateTime assignmentCreated;
+
+    @Column
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    @Temporal(TemporalType.TIMESTAMP)
+    @JsonFormat(pattern="yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+    private LocalDateTime assignmentUpdated;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

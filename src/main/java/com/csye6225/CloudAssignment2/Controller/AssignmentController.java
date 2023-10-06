@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.sql.Date;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -51,6 +52,8 @@ public class AssignmentController {
             return ResponseEntity.status(400).cacheControl(CacheControl.noCache().mustRevalidate()).build();
         }
         try {
+            assignment.setAssignmentUpdated(LocalDateTime.now());
+            assignment.setAssignmentCreated(LocalDateTime.now());
             Assignment savedAssignment = assignmentService.saveAssignment(assignment);
             return ResponseEntity.status(201).body(savedAssignment);
         } catch (IllegalArgumentException e) {
@@ -106,7 +109,7 @@ public class AssignmentController {
                 assignment.setPoints(updatedAssignment.getPoints());
                 assignment.setNum_of_attempts(updatedAssignment.getNum_of_attempts());
                 assignment.setDeadline(updatedAssignment.getDeadline());
-                assignment.setAssignmentUpdated(Date.valueOf(LocalDate.now()));
+                assignment.setAssignmentUpdated(LocalDateTime.now());
                 try{
                     assignmentService.saveAssignment(assignment);
                     return ResponseEntity.status(204).build();

@@ -32,8 +32,7 @@ public class AssignmentService {
     public Assignment saveAssignment(Assignment assignment) {
 
 
-        assignment.setAssignmentUpdated(Date.valueOf(LocalDate.now()));
-        assignment.setAssignmentCreated(Date.valueOf(LocalDate.now()));
+
         int points=assignment.getPoints();
         if(points < 1 || points > 10){
             throw new IllegalArgumentException("Points should be between 1 and 10");
