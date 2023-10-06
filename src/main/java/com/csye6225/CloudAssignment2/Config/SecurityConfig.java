@@ -22,7 +22,6 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
         http.authorizeHttpRequests((authz) -> authz.requestMatchers(new AntPathRequestMatcher("/healthz", "GET")).permitAll()
-                .requestMatchers(new AntPathRequestMatcher("/v1/assignments","GET")).permitAll()
                 .anyRequest()
                 .authenticated());
         http.httpBasic(Customizer.withDefaults());
