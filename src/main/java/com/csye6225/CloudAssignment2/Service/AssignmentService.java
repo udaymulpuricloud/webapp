@@ -40,7 +40,7 @@ public class AssignmentService {
         }
         int numAttempts = assignment.getNum_of_attempts();
         if(numAttempts < 1 || numAttempts > 10){
-            throw new IllegalArgumentException("Points should be between 1 and 10");
+            throw new IllegalArgumentException("Number of attempts should be between 1 and 10");
         }
 
         String assignmentName = assignment.getName();
