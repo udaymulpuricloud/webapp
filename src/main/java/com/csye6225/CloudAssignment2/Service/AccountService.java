@@ -41,12 +41,10 @@ public class AccountService {
             String email = userData[2];
             String password = userData[3];
 
-
             if (!isValidEmail(email)) {
                 log.error("Invalid email format for user with email: {}", email);
                 continue;
             }
-
 
             Account existing = userRepository.findByEmail(email);
             if (existing == null) {
@@ -102,4 +100,5 @@ public class AccountService {
         return userRepository.findById(id).orElse(null);
 
     }
+
 }

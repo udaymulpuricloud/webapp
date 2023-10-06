@@ -15,6 +15,7 @@ import org.apache.tomcat.util.http.parser.Authorization;
 import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.CacheControl;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -49,16 +50,15 @@ public class AssignmentController {
         if(request.getQueryString()!= null){
             return ResponseEntity.status(400).cacheControl(CacheControl.noCache().mustRevalidate()).build();
         }
-
         try {
             Assignment savedAssignment = assignmentService.saveAssignment(assignment);
             return ResponseEntity.status(201).body(savedAssignment);
-
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
     @GetMapping
+
     public ResponseEntity<Object> getAssignments(@RequestBody(required = false) Object body) {
         if(body!=null || request.getQueryString()!= null){
             return ResponseEntity.status(400).cacheControl(CacheControl.noCache().mustRevalidate()).build();
@@ -71,6 +71,8 @@ public class AssignmentController {
         if(body!=null || request.getQueryString()!= null){
             return ResponseEntity.status(400).cacheControl(CacheControl.noCache().mustRevalidate()).build();
         }
+
+   
         Optional<Assignment> assignment = assignmentService.getAssignmentById(id);
 
         if (assignment.isPresent()) {
@@ -85,13 +87,13 @@ public class AssignmentController {
         if(updatedAssignment==null || request.getQueryString()!= null){
             return ResponseEntity.status(400).cacheControl(CacheControl.noCache().mustRevalidate()).build();
         }
+
         Optional<Assignment> existingAssignment = assignmentService.getAssignmentById(id);
 
         String assignmentName = updatedAssignment.getName();
         if (assignmentName.isEmpty() || assignmentName.isEmpty()||assignmentName.trim().isEmpty()) {
             return ResponseEntity.badRequest().body("The name of Assignment shouldn't be empty");
         }
-
 
         UUID gettingId = (UUID) request.getSession().getAttribute("accountId");
 
@@ -114,6 +116,7 @@ public class AssignmentController {
             }
             else {
                 return  ResponseEntity.status(403).build();
+
             }
         } else {
             return ResponseEntity.notFound().build();
@@ -132,6 +135,7 @@ public class AssignmentController {
             if(deleteid.equals(assignment1.getCreatedBy().getId())) {
                 assignmentService.deleteAssignment(id);
                 return ResponseEntity.status(204).build();
+
             }
             else{
                 return ResponseEntity.status(403).build();
