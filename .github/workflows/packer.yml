@@ -16,7 +16,7 @@ jobs:
       - name: Setup Packer
         uses: hashicorp/setup-packer@v1
         with:
-          version: '1.9.4 # Specify the desired Packer version
+          version: '1.9.4'
 
 
       - name: Check Packer Format
