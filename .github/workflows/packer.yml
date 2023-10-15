@@ -20,7 +20,7 @@ jobs:
           sudo mv packer /usr/local/bin/
 
       - name: Initialize Packer (Install plugins)
-        run: packer init
+        run: packer init -upgrade
 
       - name: Check Packer Format
         run: packer fmt src/main/java/com/csye6225/CloudAssignment2/Packer/custom-ami.pkr.hcl
