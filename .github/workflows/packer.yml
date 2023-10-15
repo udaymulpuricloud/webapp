@@ -13,10 +13,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Setup Packer
-        uses: hashicorp/setup-packer@v1.1.3
-        with:
-          version: '1.9.4'
+      - name: Install Packer
+        run: |
+            wget https://releases.hashicorp.com/packer/1.9.4/packer_1.9.4_linux_amd64.zip
+            unzip packer_1.9.4_linux_amd64.zip
+            sudo mv packer /usr/local/bin/
 
 
       - name: Check Packer Format
