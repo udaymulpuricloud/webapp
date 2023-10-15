@@ -1,0 +1,27 @@
+name: Packer Validation
+
+on:
+  push:
+    branches:
+      - 'org'
+
+jobs:
+  packer-validation:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Setup Packer
+        uses: hashicorp/setup-packer@v2
+        with:
+          version: '1.8.9' # Specify the desired Packer version
+
+
+      - name: Check Packer Format
+        run: packer fmt src/main/java/com/csye6225/CloudAssignment2/Packer/custom-ami.pkr.hcl
+
+      - name: Validate Packer Template
+        run: packer validate src/main/java/com/csye6225/CloudAssignment2/Packer/custom-ami.pkr.hcl
+
