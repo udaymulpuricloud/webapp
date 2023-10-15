@@ -15,14 +15,15 @@ jobs:
 
       - name: Install Packer
         run: |
-            wget https://releases.hashicorp.com/packer/1.9.4/packer_1.9.4_linux_amd64.zip
-            unzip packer_1.9.4_linux_amd64.zip
-            sudo mv packer /usr/local/bin/
+          wget https://releases.hashicorp.com/packer/1.9.4/packer_1.9.4_linux_amd64.zip
+          unzip packer_1.9.4_linux_amd64.zip
+          sudo mv packer /usr/local/bin/
 
+      - name: Initialize Packer (Install plugins)
+        run: packer init
 
       - name: Check Packer Format
         run: packer fmt src/main/java/com/csye6225/CloudAssignment2/Packer/custom-ami.pkr.hcl
 
       - name: Validate Packer Template
         run: packer validate src/main/java/com/csye6225/CloudAssignment2/Packer/custom-ami.pkr.hcl
-
