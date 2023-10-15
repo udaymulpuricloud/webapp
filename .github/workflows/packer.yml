@@ -23,7 +23,12 @@ jobs:
         run: packer init src/main/java/com/csye6225/CloudAssignment2/Packer/custom-ami.pkr.hcl
 
       - name: Check Packer Format
-        run: packer fmt src/main/java/com/csye6225/CloudAssignment2/Packer/custom-ami.pkr.hcl
+        run: |
+          formatted=$(packer fmt -check src/main/java/com/csye6225/CloudAssignment2/Packer/custom-ami.pkr.hcl)
+          if [[ $formatted != "" ]]; then
+            echo "Packer template is not formatted correctly. Please run 'packer fmt'."
+            exit 1
+          fi
 
       - name: Validate Packer Template
         run: packer validate src/main/java/com/csye6225/CloudAssignment2/Packer/custom-ami.pkr.hcl
