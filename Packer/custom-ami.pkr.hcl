@@ -39,7 +39,7 @@ source "amazon-ebs" "custom-ami" {
 build {
 
   sources = ["source.amazon-ebs.custom-ami"]
-  name = "file-names"
+  name    = "file-names"
   provisioner "file" {
     source      = " ./target/CloudAssignment2-0.0.1-SNAPSHOT.jar"
     destination = "/tmp/CloudAssignment2-0.0.1-SNAPSHOT.jar"

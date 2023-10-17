@@ -22,12 +22,7 @@ jobs:
         run: packer init ./Packer/.
 
       - name: Check Packer Format
-        run: |
-          formatted=$(packer fmt -check ./Packer/.)
-          if [[ $formatted != "" ]]; then
-            echo "Packer template is not formatted correctly. Please run 'packer fmt'."
-            exit 1
-          fi
+        run: packer fmt ./Packer/.
 
       - name: Validate Packer Template
         run: packer validate -except="file-names.*" ./Packer/.
