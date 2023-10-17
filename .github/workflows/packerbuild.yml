@@ -1,7 +1,7 @@
-name : Packer Build
+name: Packer Build
 
 on:
-  push:
+  pull_request:
     branches:
       - main
 
@@ -9,7 +9,57 @@ jobs:
   packer-build:
     runs-on: ubuntu-latest
 
+    services:
+      postgres:
+        image: postgres:latest
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: Ud@R9603
+          POSTGRES_DB: assignment3
+          POSTGRES_HOST: localhost
+          POSTGRES_PORT: 5432
+        ports:
+          - 5432:5432
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+
     steps:
-      -name : CheckOut Repository
-      uses: actions/checkout@v2
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Set up Java
+        uses: actions/setup-java@v2
+        with:
+          java-version: '17'
+          distribution: 'adopt'
+
+      - name: Build and Test
+        run: mvn clean install -B
+
+      - name : Configure AWS Credentials
+        uses: aws-actions/configure-aws-credential@v4
+        with:
+          aws-access-key-id: ${{secrets.AWS_ACCESS_ID}}
+          aws-secret-access-key : ${{secrets.AWS_ACCESS_KEY}}
+          aws-region : ${{secrets.AWS_REGION}}
+
+      - name: Install Packer
+        uses: hashicorp/setup-packer@main
+        id: setup
+
+
+      - name: Initialize Packer (Install plugins)
+        run: packer init src/main/java/com/csye6225/CloudAssignment2/Packer/custom-ami.pkr.hcl
+
+      - name: Check Packer Format
+        run: |
+          formatted=$(packer fmt -check src/main/java/com/csye6225/CloudAssignment2/Packer/custom-ami.pkr.hcl)
+          if [[ $formatted != "" ]]; then
+            echo "Packer template is not formatted correctly. Please run 'packer fmt'."
+            exit 1
+          fi
+
+      - name: Validate Packer Template
+        run: packer validate src/main/java/com/csye6225/CloudAssignment2/Packer/custom-ami.pkr.hcl
+
+
 
