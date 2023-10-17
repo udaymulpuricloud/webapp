@@ -28,7 +28,7 @@ source "amazon-ebs" "custom-ami" {
   ssh_username  = var.ssh_username
   profile       = "dev"
   ami_users     = ["957845414123"]
-
+  launch_subnet_id = "subnet-085cb97ce72cd55ff"
   aws_polling {
     delay_seconds = 120
     max_attempts  = 50
