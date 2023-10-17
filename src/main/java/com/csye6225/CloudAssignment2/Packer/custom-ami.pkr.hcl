@@ -40,6 +40,15 @@ build {
 
   sources = ["source.amazon-ebs.custom-ami"]
 
+  provisioner "file"{
+    source = " ./target/CloudAssignment2-0.0.1-SNAPSHOT.jar"
+    destination = "/tmp/CloudAssignment2-0.0.1-SNAPSHOT.jar"
+  }
+  provisioner "file"{
+    source = " ./opt/users.csv"
+    destination = "/tmp/users.csv"
+  }
+
   provisioner "shell" {
     environment_vars = [
       "DEBIAN_FRONTEND=noninteractive",
