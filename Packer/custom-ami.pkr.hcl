@@ -46,7 +46,7 @@ build {
     destination = "/tmp/CloudAssignment2-0.0.1-SNAPSHOT.jar"
   }
   provisioner "file" {
-    source      = " ./opt/users.csv"
+    source      = "opt/users.csv"
     destination = "/tmp/users.csv"
   }
 
