@@ -41,7 +41,7 @@ build {
   sources = ["source.amazon-ebs.custom-ami"]
   name    = "file-names"
   provisioner "file" {
-    source      = "target/CloudAssignment2-0.0.1-SNAPSHOT.jar"
+    source = "target/CloudAssignment2-0.0.1-SNAPSHOT.jar"
 
     destination = "/tmp/CloudAssignment2-0.0.1-SNAPSHOT.jar"
   }
@@ -59,10 +59,13 @@ build {
       "sudo apt-get update",
       "sudo apt-get upgrade -y",
       "sudo apt-get clean",
-      "sudo cp /tmp/CloudAssignment2-0.0.1-SNAPSHOT.jar /opt/",
-      "sudo cp /tmp/users.csv /opt/",
-      "Packer/ami-script.sh"
+      "sudo mv /tmp/CloudAssignment2-0.0.1-SNAPSHOT.jar /opt/",
+      "sudo mv /tmp/users.csv /opt/",
+
     ]
+  }
+  provisioner "shell" {
+    script = "ami-script.sh"
   }
 
 
