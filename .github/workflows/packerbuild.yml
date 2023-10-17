@@ -59,7 +59,7 @@ jobs:
         run: packer validate ./Packer/.
 
       - name: packer building
-        run: packer build ./Packer/.
+        run: packer build -var "source_jar=target/CloudAssignment2-0.0.1-SNAPSHOT.jar" ./Packer/.
 
 
 
