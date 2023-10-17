@@ -35,6 +35,9 @@ jobs:
       - name: Build and Test
         run: mvn clean install -B
 
+      - name: to see name
+        run : ls -l ./target/
+
       - name : Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
