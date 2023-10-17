@@ -49,7 +49,6 @@ jobs:
         uses: hashicorp/setup-packer@main
         id: setup
 
-
       - name: Initialize Packer (Install plugins)
         run: packer init ./Packer/.
 
@@ -58,6 +57,7 @@ jobs:
 
       - name: Validate Packer Template
         run: packer validate -except="file-names.*" ./Packer/.
+
       - name: packer building
         run: packer build ./Packer/.
 
