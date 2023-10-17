@@ -9,11 +9,11 @@ packer {
 
 variable "source_ami" {
   type    = string
-  default = "ami-053b0d53c279acc90" # debian 64
+  default = "ami-06db4d78cb1d3bbf9" # debian 64
 }
 variable "ssh_username" {
   type    = string
-  default = "ubuntu"
+  default = "admin"
 }
 variable "aws_region" {
   type    = string
