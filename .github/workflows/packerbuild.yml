@@ -48,18 +48,20 @@ jobs:
 
 
       - name: Initialize Packer (Install plugins)
-        run: packer init src/main/java/com/csye6225/CloudAssignment2/Packer/custom-ami.pkr.hcl
+        run: packer init ./Packer/.
 
       - name: Check Packer Format
         run: |
-          formatted=$(packer fmt -check src/main/java/com/csye6225/CloudAssignment2/Packer/custom-ami.pkr.hcl)
+          formatted=$(packer fmt -check ./Packer/.)
           if [[ $formatted != "" ]]; then
             echo "Packer template is not formatted correctly. Please run 'packer fmt'."
             exit 1
           fi
 
       - name: Validate Packer Template
-        run: packer validate src/main/java/com/csye6225/CloudAssignment2/Packer/custom-ami.pkr.hcl
+        run: packer validate ./Packer/.
+      - name: packer building
+        run: packer build ./Packer/.
 
 
 
