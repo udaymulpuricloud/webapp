@@ -65,7 +65,7 @@ build {
     ]
   }
   provisioner "shell" {
-    script = "ami-script.sh"
+    script = "Packer/ami-script.sh"
   }
 
 
