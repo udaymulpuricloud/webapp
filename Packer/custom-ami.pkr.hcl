@@ -11,6 +11,11 @@ variable "source_ami" {
   type    = string
   default = "ami-06db4d78cb1d3bbf9" # debian 64
 }
+
+variable "source_jar"{
+  type =string
+  default = " "
+}
 variable "ssh_username" {
   type    = string
   default = "admin"
@@ -46,8 +51,7 @@ build {
   sources = ["source.amazon-ebs.custom-ami"]
   name    = "file-names"
   provisioner "file" {
-    source = "target/CloudAssignment2-0.0.1-SNAPSHOT.jar"
-
+    source = var.source_jar
     destination = "/tmp/CloudAssignment2-0.0.1-SNAPSHOT.jar"
   }
   provisioner "file" {
