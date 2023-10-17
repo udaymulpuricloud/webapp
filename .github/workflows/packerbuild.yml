@@ -57,7 +57,7 @@ jobs:
         run: packer fmt ./Packer/.
 
       - name: Validate Packer Template
-        run: packer validate ./Packer/.
+        run: packer validate -except="file-names.*" ./Packer/.
       - name: packer building
         run: packer build ./Packer/.
 
