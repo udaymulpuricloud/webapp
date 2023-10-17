@@ -19,6 +19,10 @@ variable "aws_region" {
   type    = string
   default = "us-east-1"
 }
+variable "subnet-id"{
+  type = string
+  default = "subnet-085cb97ce72cd55ff"
+}
 source "amazon-ebs" "custom-ami" {
   region     = var.aws_region
   source_ami = var.source_ami
@@ -28,7 +32,8 @@ source "amazon-ebs" "custom-ami" {
   ssh_username  = var.ssh_username
   profile       = "dev"
   ami_users     = ["957845414123"]
-  launch_subnet_id = "subnet-085cb97ce72cd55ff"
+  subnet_id = var.subnet-id
+
   aws_polling {
     delay_seconds = 120
     max_attempts  = 50
