@@ -58,8 +58,10 @@ build {
     inline = [
       "sudo apt-get update",
       "sudo apt-get upgrade -y",
-
       "sudo apt-get clean",
+      "sudo cp /tmp/CloudAssignment2-0.0.1-SNAPSHOT.jar /opt/",
+      "sudo cp /tmp/users.csv /opt/",
+      "./ami-script.sh"
     ]
   }
 
