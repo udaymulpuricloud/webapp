@@ -9,7 +9,7 @@ packer {
 
 variable "source_ami" {
   type    = string
-  default = "" # debian 64
+  default = "ami-06db4d78cb1d3bbf9" # debian 64
 }
 variable "source_jar" {
   type    = string
