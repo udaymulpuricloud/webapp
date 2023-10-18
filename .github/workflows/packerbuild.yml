@@ -1,7 +1,7 @@
 name: Packer Build
 
 on:
-  pull_request:
+  push:
     branches:
       - main
 
@@ -59,7 +59,7 @@ jobs:
         run: packer validate ./Packer/.
 
       - name: packer building
-        run: packer build -var "source_jar=target/CloudAssignment2-0.0.1-SNAPSHOT.jar" ./Packer/.
+        run: packer build -var "source_jar=target/CloudAssignment2-0.0.1-SNAPSHOT.jar" -var "source_ami=${{secrets.AMI_ID}}" ./Packer/.
 
 
 
