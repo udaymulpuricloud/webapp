@@ -9,11 +9,10 @@ packer {
 
 variable "source_ami" {
   type    = string
-  default = "ami-06db4d78cb1d3bbf9" # debian 64
+  default = "" # debian 64
 }
-
-variable "source_jar"{
-  type =string
+variable "source_jar" {
+  type    = string
   default = ""
 }
 variable "ssh_username" {
@@ -24,20 +23,20 @@ variable "aws_region" {
   type    = string
   default = "us-east-1"
 }
-variable "subnet-id"{
-  type = string
+variable "subnet-id" {
+  type    = string
   default = "subnet-085cb97ce72cd55ff"
 }
 source "amazon-ebs" "custom-ami" {
   region     = var.aws_region
   source_ami = var.source_ami
   ami_name   = "csye6225_${formatdate("YYYY_MM_DD_hh_mm_ss", timestamp())}"
-  #  description   = "Custom AMI Example CSYE 6225"
+
   instance_type = "t2.micro" # Specify the instance type for the temporary instance
   ssh_username  = var.ssh_username
   profile       = "dev"
   ami_users     = ["957845414123"]
-  subnet_id = var.subnet-id
+  subnet_id     = var.subnet-id
 
   aws_polling {
     delay_seconds = 120
@@ -51,7 +50,7 @@ build {
   sources = ["source.amazon-ebs.custom-ami"]
   name    = "file-names"
   provisioner "file" {
-    source ="${var.source_jar}"
+    source      = "${var.source_jar}"
     destination = "/tmp/CloudAssignment2-0.0.1-SNAPSHOT.jar"
   }
   provisioner "file" {
