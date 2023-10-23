@@ -22,7 +22,8 @@ jobs:
         run: packer init ./Packer/.
 
       - name: Check Packer Format
-        run: packer fmt ./Packer/.
+        run: formatted=$(packer fmt -check ./Packer/.)
+
 
 
       - name: Validate Packer Template
