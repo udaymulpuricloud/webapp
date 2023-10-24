@@ -13,6 +13,6 @@ buildNumber.properties
 # Eclipse m2e generated filesg
 # Eclipse Core
 .project
-idea/
+.idea
 # JDT-specific (Eclipse Java Development Tools)
 .classpath
