@@ -75,6 +75,19 @@ build {
   provisioner "shell" {
     script = "Packer/ami-script.sh"
   }
+  provisioner "file" {
+    source      = "systemd/webapp.service"
+    destination = "/etc/systemd/system/webapp.service"
+  }
+
+  provisioner "shell" {
+    inline = [
+      "sudo systemctl daemon-reload",
+      "sudo systemctl enable CloudAssignment2",
+      "sudo systemctl start CloudAssignment2"
+    ]
+  }
+
 
 
 }
