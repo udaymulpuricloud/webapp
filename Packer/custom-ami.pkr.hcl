@@ -78,6 +78,7 @@ build {
   provisioner "file" {
     source      = "systemd/webapp.service"
     destination = "/etc/systemd/system/webapp.service"
+    sudo        = true
   }
 
   provisioner "shell" {
