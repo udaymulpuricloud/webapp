@@ -86,7 +86,7 @@ build {
   provisioner "shell" {
     inline = [
       "sudo mkdir -p /tmp/systemd",
-      "sudo cp systemd/webapp.service /tmp/systemd/",
+      "sudo cp ./systemd/webapp.service /tmp/systemd/",
       "sudo mv /tmp/systemd/webapp.service /etc/systemd/system/",
       "sudo systemctl daemon-reload",
       "sudo systemctl enable CloudAssignment2-0.0.1-SNAPSHOT.jar",
