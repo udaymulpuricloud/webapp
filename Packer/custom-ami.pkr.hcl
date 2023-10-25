@@ -77,17 +77,17 @@ build {
   #  provisioner "shell" {
   #    script = "Packer/ami-script.sh"
   #  }
-  #  provisioner "file" {
-  #    source      = "systemd/webapp.service"
-  #    destination = "/etc/systemd/system/"
-  #
-  #  }
+  provisioner "file" {
+    source      = "systemd/webapp.service"
+    destination = "/tmp/"
+
+  }
 
   provisioner "shell" {
     inline = [
       "sudo mkdir -p /tmp/systemd",
-      "sudo cp ./systemd/webapp.service /tmp/systemd/",
-      "sudo mv /tmp/systemd/webapp.service /etc/systemd/system/",
+      #      "sudo cp ./systemd/webapp.service /tmp/systemd/",
+      "sudo mv /tmp/webapp.service /etc/systemd/system/",
       "sudo systemctl daemon-reload",
       "sudo systemctl enable CloudAssignment2-0.0.1-SNAPSHOT.jar",
       "sudo systemctl start CloudAssignment2-0.0.1-SNAPSHOT.jar"
