@@ -1,6 +1,6 @@
 [Unit]
 Description = Running Web App!
-ConditionPathExists=/opt/CloudAssignment2-0.0.1-SNAPSHOT.jar
+ConditionPathExists=/opt/csye6225/CloudAssignment2-0.0.1-SNAPSHOT.jar
 After=cloud-final.target
 
 
