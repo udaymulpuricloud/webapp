@@ -67,9 +67,10 @@ build {
       "sudo apt-get update",
       "sudo apt-get upgrade -y",
       "sudo apt-get clean",
+      "sudo groupadd csye6225",
       "sudo useradd -s /bin/false -g csye6225 -d /opt/csye6225 -m csye6225",
-      "sudo mv /tmp/CloudAssignment2-0.0.1-SNAPSHOT.jar /opt/csye6225",
-      "sudo mv /tmp/users.csv /opt/csye6225",
+      "sudo mv /tmp/CloudAssignment2-0.0.1-SNAPSHOT.jar /opt/csye6225/",
+      "sudo mv /tmp/users.csv /opt/csye6225/",
       "sudo apt-get install openjdk-17-jdk -y",
       "sudo apt-get install maven -y"
 
