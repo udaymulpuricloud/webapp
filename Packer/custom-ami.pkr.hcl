@@ -89,6 +89,7 @@ build {
     inline = [
       "sudo mkdir -p /tmp/systemd",
       "sudo mv /tmp/webapp.service /etc/systemd/system/",
+      "sudo -u csye6225 touch /opt/csye6225/application.properties",
       "sudo chmod 750 /opt/csye6225/CloudAssignment2-0.0.1-SNAPSHOT.jar",
       "sudo chmod 750 /opt/csye6225/application.properties",
       "sudo systemctl daemon-reload",
