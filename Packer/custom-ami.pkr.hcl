@@ -69,20 +69,25 @@ build {
       "sudo apt-get clean",
       "sudo mv /tmp/CloudAssignment2-0.0.1-SNAPSHOT.jar /opt/",
       "sudo mv /tmp/users.csv /opt/",
+      "sudo apt-get install openjdk-17-jdk -y",
+      "sudo apt-get install maven -y"
 
     ]
   }
-  provisioner "shell" {
-    script = "Packer/ami-script.sh"
-  }
+  #  provisioner "shell" {
+  #    script = "Packer/ami-script.sh"
+  #  }
   provisioner "file" {
     source      = "systemd/webapp.service"
     destination = "/etc/systemd/system/webapp.service"
-    sudo        = true
+
   }
 
   provisioner "shell" {
     inline = [
+      "sudo mkdir -p /tmp/systemd",
+      "sudo cp path/to/your-service-file.service /tmp/systemd/CloudAssignment2.service",
+      "sudo mv /tmp/systemd/CloudAssignment2.service /etc/systemd/system/",
       "sudo systemctl daemon-reload",
       "sudo systemctl enable CloudAssignment2",
       "sudo systemctl start CloudAssignment2"
