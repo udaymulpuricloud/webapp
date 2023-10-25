@@ -89,8 +89,8 @@ build {
       #      "sudo cp ./systemd/webapp.service /tmp/systemd/",
       "sudo mv /tmp/webapp.service /etc/systemd/system/",
       "sudo systemctl daemon-reload",
-      "sudo systemctl enable CloudAssignment2-0.0.1-SNAPSHOT.jar",
-      "sudo systemctl start CloudAssignment2-0.0.1-SNAPSHOT.jar"
+      "sudo systemctl enable webapp.service",
+      "sudo systemctl start webapp.service"
     ]
   }
 
