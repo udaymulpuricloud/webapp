@@ -77,11 +77,11 @@ build {
   #  provisioner "shell" {
   #    script = "Packer/ami-script.sh"
   #  }
-  provisioner "file" {
-    source      = "systemd/webapp.service"
-    destination = "/etc/systemd/system/"
-
-  }
+#  provisioner "file" {
+#    source      = "systemd/webapp.service"
+#    destination = "/etc/systemd/system/"
+#
+#  }
 
   provisioner "shell" {
     inline = [
