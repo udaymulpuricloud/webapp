@@ -88,7 +88,6 @@ build {
   provisioner "shell" {
     inline = [
       "sudo mkdir -p /tmp/systemd",
-      #      "sudo cp ./systemd/webapp.service /tmp/systemd/",
       "sudo mv /tmp/webapp.service /etc/systemd/system/",
       "sudo systemctl daemon-reload",
       "sudo systemctl enable webapp.service",
