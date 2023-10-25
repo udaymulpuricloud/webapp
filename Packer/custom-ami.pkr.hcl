@@ -79,18 +79,18 @@ build {
   #  }
   provisioner "file" {
     source      = "systemd/webapp.service"
-    destination = "/etc/systemd/system/webapp.service"
+    destination = "/etc/systemd/system/"
 
   }
 
   provisioner "shell" {
     inline = [
       "sudo mkdir -p /tmp/systemd",
-      "sudo cp path/to/your-service-file.service /tmp/systemd/CloudAssignment2.service",
-      "sudo mv /tmp/systemd/CloudAssignment2.service /etc/systemd/system/",
+      "sudo cp systemd/webapp.service /tmp/systemd/",
+      "sudo mv /tmp/systemd/webapp.service /etc/systemd/system/",
       "sudo systemctl daemon-reload",
-      "sudo systemctl enable CloudAssignment2",
-      "sudo systemctl start CloudAssignment2"
+      "sudo systemctl enable CloudAssignment2-0.0.1-SNAPSHOT.jar",
+      "sudo systemctl start CloudAssignment2-0.0.1-SNAPSHOT.jar"
     ]
   }
 
