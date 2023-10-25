@@ -11,6 +11,8 @@ User=csye6225
 Group=csye6225
 WorkingDirectory=/opt
 ExecStart=/bin/bash -c "source /etc/environment && /usr/bin/java -jar /opt/CloudAssignment2-0.0.1-SNAPSHOT.jar"
+
+
 Restart=always
 RestartSec=3
 
