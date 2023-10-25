@@ -70,7 +70,7 @@ build {
       "sudo groupadd csye6225",
       "sudo useradd -s /bin/false -g csye6225 -d /opt/csye6225 -m csye6225",
       "sudo mv /tmp/CloudAssignment2-0.0.1-SNAPSHOT.jar /opt/csye6225/",
-      "sudo mv /tmp/users.csv /opt/csye6225/",
+      "sudo mv /tmp/users.csv /opt/",
       "sudo apt-get install openjdk-17-jdk -y",
       "sudo apt-get install maven -y"
 
@@ -89,6 +89,8 @@ build {
     inline = [
       "sudo mkdir -p /tmp/systemd",
       "sudo mv /tmp/webapp.service /etc/systemd/system/",
+      "sudo chmod 750 /opt/csye6225/CloudAssignment2-0.0.1-SNAPSHOT.jar",
+      "sudo chmod 750 /opt/csye6225/application.properties",
       "sudo systemctl daemon-reload",
       "sudo systemctl enable webapp.service",
       "sudo systemctl start webapp.service"
