@@ -41,6 +41,9 @@ public class AssignmentService {
         if(numAttempts < 1 || numAttempts > 10){
             throw new IllegalArgumentException("Number of attempts should be between 1 and 10");
         }
+        if(!assignment.getName().matches(".*[a-zA-Z].*")){
+            throw new IllegalArgumentException("Assignment name should contain atleast one Alphabet");
+        }
 
         String assignmentName = assignment.getName();
         if (assignmentName.isEmpty() || assignmentName.isEmpty()||assignmentName.trim().isEmpty()) {
