@@ -57,6 +57,16 @@ build {
     source      = "opt/users.csv"
     destination = "/tmp/users.csv"
   }
+  provisioner "file" {
+    source      = "systemd/webapp.service"
+    destination = "/tmp/"
+
+  }
+
+  provisioner "file" {
+    source ="cloudwatch/cloudwatch-config.json"
+    destination ="/tmp/"
+  }
 
   provisioner "shell" {
     environment_vars = [
@@ -71,24 +81,22 @@ build {
       "sudo useradd -s /bin/false -g csye6225 -d /opt/csye6225 -m csye6225",
       "sudo mv /tmp/CloudAssignment2-0.0.1-SNAPSHOT.jar /opt/csye6225/",
       "sudo mv /tmp/users.csv /opt/",
+      "sudo mkdir -p /tmp/systemd",
+      "sudo mv /tmp/webapp.service /etc/systemd/system/",
+      "sudo mkdir -p /var/log/tomcat9/",
+      "sudo mv /tmp/cloudwatch-config.json /opt/",
       "sudo apt-get install openjdk-17-jdk -y",
       "sudo apt-get install maven -y"
 
     ]
   }
-  #  provisioner "shell" {
-  #    script = "Packer/ami-script.sh"
-  #  }
-  provisioner "file" {
-    source      = "systemd/webapp.service"
-    destination = "/tmp/"
-
-  }
+    provisioner "shell" {
+      script = "Packer/ami-script.sh"
+    }
 
   provisioner "shell" {
     inline = [
-      "sudo mkdir -p /tmp/systemd",
-      "sudo mv /tmp/webapp.service /etc/systemd/system/",
+
       "sudo -u csye6225 touch /opt/csye6225/application.properties",
       "sudo chown csye6225:csye6225 /opt/csye6225/CloudAssignment2-0.0.1-SNAPSHOT.jar",
       "sudo chmod 750 /opt/csye6225/CloudAssignment2-0.0.1-SNAPSHOT.jar",
