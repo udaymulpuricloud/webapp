@@ -64,8 +64,8 @@ build {
   }
 
   provisioner "file" {
-    source ="cloudwatch/cloudwatch-config.json"
-    destination ="/tmp/"
+    source      = "cloudwatch/cloudwatch-config.json"
+    destination = "/tmp/"
   }
 
   provisioner "shell" {
@@ -90,9 +90,9 @@ build {
 
     ]
   }
-    provisioner "shell" {
-      script = "Packer/ami-script.sh"
-    }
+  provisioner "shell" {
+    script = "Packer/ami-script.sh"
+  }
 
   provisioner "shell" {
     inline = [
