@@ -7,6 +7,12 @@ sudo apt-get install openjdk-17-jdk -y
 # Install Maven
 sudo apt-get install maven -y
 
+wget https://s3.amazonaws.com/amazoncloudwatch-agent/linux/amd64/latest/amazon-cloudwatch-agent.rpm
+sudo rpm -U ./amazon-cloudwatch-agent.rpm
+sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config\
+-m ec2\
+-c file:/opt/cloudwatch-config.json \
+-s
 # Set up PostgreSQL
 #sudo apt-get install postgresql -y
 #
