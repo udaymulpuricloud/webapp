@@ -1,11 +1,12 @@
 #!/bin/bash
 
+#
+## Install Java (OpenJDK 17 in this example)
+#sudo apt-get install openjdk-17-jdk -y
+#
+## Install Maven
+#sudo apt-get install maven -y
 
-# Install Java (OpenJDK 17 in this example)
-sudo apt-get install openjdk-17-jdk -y
-
-# Install Maven
-sudo apt-get install maven -y
 
 wget https://s3.amazonaws.com/amazoncloudwatch-agent/linux/amd64/latest/amazon-cloudwatch-agent.rpm
 sudo rpm -U ./amazon-cloudwatch-agent.rpm
