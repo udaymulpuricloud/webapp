@@ -104,7 +104,8 @@ build {
       "sudo chmod 750 /opt/csye6225/application.properties",
       "sudo systemctl daemon-reload",
       "sudo systemctl enable webapp.service",
-      "sudo systemctl start webapp.service"
+      "sudo systemctl start webapp.service",
+      "sudo systemctl enable amazon-cloudwatch-agent"
     ]
   }
 
