@@ -24,8 +24,8 @@ public class ValidationConfig implements AuthenticationProvider {
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         String username=authentication.getName();
         String password=authentication.getCredentials().toString();
-        System.out.println("Received username: " + username);
-        System.out.println("Loaded password: " + password);
+//        System.out.println("Received username: " + username);
+//        System.out.println("Loaded password: " + password);
         UserDetails user = customAccountDetailsService.loadUserByUsername(username);
 
         if(passwordEncoder.matches(password,user.getPassword())){
