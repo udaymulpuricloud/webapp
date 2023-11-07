@@ -13,19 +13,19 @@ import jdk.jfr.Frequency;
 import org.apache.coyote.Request;
 import org.apache.tomcat.util.http.parser.Authorization;
 import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.CacheControl;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+import org.slf4j.Logger;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import  java.util.logging.Logger;
 
 
 
@@ -48,11 +48,11 @@ public class AssignmentController {
     @Autowired
     private AccountRepository accountRepository;
 
-    Logger logger= Logger.getLogger("Assignment Controller");
+    Logger logger= LoggerFactory.getLogger("Assignment Controller");
     @PostMapping()
     public ResponseEntity<?> createAssignment(@RequestBody Assignment assignment){
         if(request.getQueryString()!= null){
-            logger.warning("Received request with query string. Returning 400 Bad Request.");
+            logger.warn("Received request with query string. Returning 400 Bad Request.");
             return ResponseEntity.status(400).cacheControl(CacheControl.noCache().mustRevalidate()).build();
         }
         try {
@@ -62,7 +62,7 @@ public class AssignmentController {
             logger.info("Assignment Created Successfully!");
             return ResponseEntity.status(201).body(savedAssignment);
         } catch (IllegalArgumentException e) {
-            logger.severe("Error Creating the Assignment:"+e.getMessage());
+            logger.error("Error Creating the Assignment:"+e.getMessage());
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
@@ -70,7 +70,7 @@ public class AssignmentController {
 
     public ResponseEntity<Object> getAssignments(@RequestBody(required = false) Object body) {
         if(body!=null || request.getQueryString()!= null){
-            logger.warning("Received request with query string. Returning 400 Bad Request.");
+            logger.warn("Received request with query string. Returning 400 Bad Request.");
             return ResponseEntity.status(400).cacheControl(CacheControl.noCache().mustRevalidate()).build();
         }
         logger.info("Retrieved assignments successfully.");
@@ -79,7 +79,7 @@ public class AssignmentController {
     @GetMapping("/{id}")
     public ResponseEntity<Assignment> getAssignmentById(@PathVariable UUID id,@RequestBody(required = false) Object body) {
         if(body!=null || request.getQueryString()!= null){
-            logger.warning("Received request with body or query string. Returning 400 Bad Request.");
+            logger.warn("Received request with body or query string. Returning 400 Bad Request.");
             return ResponseEntity.status(400).cacheControl(CacheControl.noCache().mustRevalidate()).build();
         }
 
@@ -90,7 +90,7 @@ public class AssignmentController {
             logger.info("Retrieved assignment with ID " + id + " successfully.");
             return ResponseEntity.ok(assignment.get());
         } else {
-            logger.warning("Assignment with ID " + id + " not found.");
+            logger.warn("Assignment with ID " + id + " not found.");
             return ResponseEntity.notFound().build();
         }
     }
@@ -98,7 +98,7 @@ public class AssignmentController {
     @PutMapping("/{id}")
     public ResponseEntity<Object> updateAssignment(@PathVariable UUID id, @RequestBody(required = false) Assignment updatedAssignment) {
         if(updatedAssignment==null || request.getQueryString()!= null){
-            logger.warning("Received request with null body or query string. Returning 400 Bad Request.");
+            logger.warn("Received request with null body or query string. Returning 400 Bad Request.");
             return ResponseEntity.status(400).cacheControl(CacheControl.noCache().mustRevalidate()).build();
         }
 
@@ -126,17 +126,17 @@ public class AssignmentController {
                     logger.info("Assignment with ID " + id + " updated successfully.");
                     return ResponseEntity.status(204).build();
                 }catch (Exception ex){
-                    logger.severe("Error updating assignment with ID " + id + ": " + ex.getMessage());
+                    logger.error("Error updating assignment with ID " + id + ": " + ex.getMessage());
                     return ResponseEntity.status(400).body(ex.getMessage());
                 }
             }
             else {
-                logger.warning("Unauthorized access to update assignment with ID " + id);
+                logger.warn("Unauthorized access to update assignment with ID " + id);
                 return  ResponseEntity.status(403).build();
 
             }
         } else {
-            logger.warning("Assignment with ID " + id + " not found for update.");
+            logger.warn("Assignment with ID " + id + " not found for update.");
             return ResponseEntity.notFound().build();
         }
     }
@@ -144,7 +144,7 @@ public class AssignmentController {
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteAssignment(@PathVariable UUID id,@RequestBody(required = false) Object body) {
         if(body!=null || request.getQueryString()!= null){
-            logger.warning("Received request with null body or query string. Returning 400 Bad Request.");
+            logger.warn("Received request with null body or query string. Returning 400 Bad Request.");
             return ResponseEntity.status(400).cacheControl(CacheControl.noCache().mustRevalidate()).build();
         }
         Optional<Assignment> existingAssignment = assignmentService.getAssignmentById(id);
@@ -158,11 +158,11 @@ public class AssignmentController {
 
             }
             else{
-                logger.warning("Unauthorized access to delete assignment with ID " + id);
+                logger.warn("Unauthorized access to delete assignment with ID " + id);
                 return ResponseEntity.status(403).build();
             }
         } else {
-            logger.warning("Assignment with ID " + id + " not found for deletion.");
+            logger.warn("Assignment with ID " + id + " not found for deletion.");
             return ResponseEntity.notFound().build();
         }
     }
