@@ -1,5 +1,7 @@
 package com.csye6225.CloudAssignment2.Controller;
 import com.csye6225.CloudAssignment2.Repository.AssignmentRepository;
+import com.timgroup.statsd.NonBlockingStatsDClient;
+import com.timgroup.statsd.StatsDClient;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import com.csye6225.CloudAssignment2.Model.Account;
@@ -47,10 +49,12 @@ public class AssignmentController {
 
     @Autowired
     private AccountRepository accountRepository;
+    private final StatsDClient statsDClient = new NonBlockingStatsDClient("metricn","localhost",8125);
 
     Logger logger= LoggerFactory.getLogger("Assignment Controller");
     @PostMapping()
     public ResponseEntity<?> createAssignment(@RequestBody Assignment assignment){
+        statsDClient.incrementCounter("Creating Assignment API");
         if(request.getQueryString()!= null){
             logger.warn("Received request with query string. Returning 400 Bad Request.");
             return ResponseEntity.status(400).cacheControl(CacheControl.noCache().mustRevalidate()).build();
@@ -69,15 +73,18 @@ public class AssignmentController {
     @GetMapping
 
     public ResponseEntity<Object> getAssignments(@RequestBody(required = false) Object body) {
+        statsDClient.incrementCounter("Get Assignment API");
         if(body!=null || request.getQueryString()!= null){
             logger.warn("Received request with query string. Returning 400 Bad Request.");
             return ResponseEntity.status(400).cacheControl(CacheControl.noCache().mustRevalidate()).build();
         }
         logger.info("Retrieved assignments successfully.");
+
         return ResponseEntity.ok(assignmentService.getAllAssignments());
     }
     @GetMapping("/{id}")
     public ResponseEntity<Assignment> getAssignmentById(@PathVariable UUID id,@RequestBody(required = false) Object body) {
+        statsDClient.incrementCounter("Get Assignment By ID API");
         if(body!=null || request.getQueryString()!= null){
             logger.warn("Received request with body or query string. Returning 400 Bad Request.");
             return ResponseEntity.status(400).cacheControl(CacheControl.noCache().mustRevalidate()).build();
@@ -97,6 +104,7 @@ public class AssignmentController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Object> updateAssignment(@PathVariable UUID id, @RequestBody(required = false) Assignment updatedAssignment) {
+        statsDClient.incrementCounter("Update Assignment API");
         if(updatedAssignment==null || request.getQueryString()!= null){
             logger.warn("Received request with null body or query string. Returning 400 Bad Request.");
             return ResponseEntity.status(400).cacheControl(CacheControl.noCache().mustRevalidate()).build();
@@ -143,6 +151,7 @@ public class AssignmentController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteAssignment(@PathVariable UUID id,@RequestBody(required = false) Object body) {
+        statsDClient.incrementCounter("Delete Assignment API");
         if(body!=null || request.getQueryString()!= null){
             logger.warn("Received request with null body or query string. Returning 400 Bad Request.");
             return ResponseEntity.status(400).cacheControl(CacheControl.noCache().mustRevalidate()).build();
