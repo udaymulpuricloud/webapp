@@ -23,7 +23,7 @@ public class HealthzController {
 
     @Autowired
     private JdbcTemplate jdbctemplate;
-Logger logger= LoggerFactory.getLogger(HealthzController.class);
+Logger logger= LoggerFactory.getLogger("HealthzController");
     @Autowired
     private HttpServletRequest request;
 private final StatsDClient statsDClient = new NonBlockingStatsDClient("metricn","localhost",8125);
