@@ -49,7 +49,10 @@ public class AssignmentController {
 
     @Autowired
     private AccountRepository accountRepository;
-    private final StatsDClient statsDClient = new NonBlockingStatsDClient("metricn","localhost",8125);
+    private final StatsDClient statsDClient = new NonBlockingStatsDClient("metric","localhost",8125);
+
+//    @Autowired
+//    private StatsDClient statsDClient;
 
     Logger logger= LoggerFactory.getLogger("Assignment Controller");
     @PostMapping()
