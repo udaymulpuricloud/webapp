@@ -4,6 +4,7 @@ import com.timgroup.statsd.NonBlockingStatsDClient;
 import com.timgroup.statsd.StatsDClient;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.CacheControl;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.slf4j.Logger;
 
 @RestController
 @RequestMapping("/healthz")
@@ -21,7 +23,7 @@ public class HealthzController {
 
     @Autowired
     private JdbcTemplate jdbctemplate;
-
+Logger logger= LoggerFactory.getLogger(HealthzController.class);
     @Autowired
     private HttpServletRequest request;
 private final StatsDClient statsDClient = new NonBlockingStatsDClient("metricn","localhost",8125);
@@ -33,14 +35,17 @@ private final StatsDClient statsDClient = new NonBlockingStatsDClient("metricn",
         headers.set("X-Content-Type-Options","nosniff");
         statsDClient.incrementCounter("healthz");
         if(body!=null || request.getQueryString()!= null){
+            logger.error("Bad Request");
             return ResponseEntity.status(400).cacheControl(CacheControl.noCache().mustRevalidate()).headers(headers).build();
         }
         try {
             jdbctemplate.queryForObject("Select 1", Integer.class);
+            logger.info("Connected to Db,Healthz Check!");
             return ResponseEntity.status(200).cacheControl(CacheControl.noCache().mustRevalidate()).headers(headers).build();
 
 
         } catch (DataAccessException e) {
+            logger.info("Serivce Unavailable");
             return ResponseEntity.status(503).cacheControl(CacheControl.noCache().mustRevalidate()).headers(headers).build();
         }
     }
