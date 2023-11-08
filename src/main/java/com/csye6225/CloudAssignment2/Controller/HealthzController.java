@@ -1,5 +1,7 @@
 package com.csye6225.CloudAssignment2.Controller;
 
+import com.timgroup.statsd.NonBlockingStatsDClient;
+import com.timgroup.statsd.StatsDClient;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,19 +24,19 @@ public class HealthzController {
 
     @Autowired
     private HttpServletRequest request;
-
+private final StatsDClient statsDClient = new NonBlockingStatsDClient("metricn","localhost",8125);
     @GetMapping()
     public ResponseEntity<Void> hello(@RequestBody(required=false)Object body) {
         HttpHeaders headers;
         headers=new HttpHeaders();
         headers.set("Pragma", "no-cache");
         headers.set("X-Content-Type-Options","nosniff");
+        statsDClient.incrementCounter("healthz");
         if(body!=null || request.getQueryString()!= null){
             return ResponseEntity.status(400).cacheControl(CacheControl.noCache().mustRevalidate()).headers(headers).build();
         }
         try {
             jdbctemplate.queryForObject("Select 1", Integer.class);
-
             return ResponseEntity.status(200).cacheControl(CacheControl.noCache().mustRevalidate()).headers(headers).build();
 
 
