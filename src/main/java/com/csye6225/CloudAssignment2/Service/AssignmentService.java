@@ -1,18 +1,20 @@
 package com.csye6225.CloudAssignment2.Service;
 
 import com.csye6225.CloudAssignment2.Model.Assignment;
-import com.csye6225.CloudAssignment2.Repository.AccountRepository;
+import com.csye6225.CloudAssignment2.Model.Submission;
+import com.csye6225.CloudAssignment2.Model.SubmissionRequest;
 import com.csye6225.CloudAssignment2.Repository.AssignmentRepository;
+//import com.csye6225.CloudAssignment2.Repository.SubmissionRepository;
+import com.csye6225.CloudAssignment2.Repository.SubmissionRepository;
 import jakarta.persistence.EntityNotFoundException;
-import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
-import java.sql.Date;
-import java.time.LocalDate;
+
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -26,9 +28,16 @@ public class AssignmentService {
     HttpServletRequest request;
     @Autowired
     AccountService accountService;
+    @Autowired
+    Submission submission;
 
     @Autowired
     private AssignmentRepository assignmentRepository;
+
+    @Autowired
+    private SubmissionRepository submissionRepository;
+
+
     public Assignment saveAssignment(Assignment assignment) {
 
 
@@ -74,4 +83,24 @@ public class AssignmentService {
             throw new EntityNotFoundException("Assignment not found with ID: " + id);
         }
     }
+    public static boolean isAssignmentOpen(Assignment assignment){
+        LocalDateTime now = LocalDateTime.now();
+        return now.isBefore(assignment.getDeadline());
+    }
+
+    public Submission processSubmission(Assignment assignment, SubmissionRequest submissionRequest){
+     Submission submission = new Submission();
+     submission.setId(UUID.randomUUID());
+     submission.setAssignmentid(assignment.getId());
+     submission.setSubmission_updated(LocalDateTime.now());
+     submission.setSubmission_date(LocalDateTime.now());
+     submission.setSubmissionurl(submissionRequest.getSubmission_url());
+
+
+       return submissionRepository.save(submission);
+// return submission;
+
+    }
+
+
 }
