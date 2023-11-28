@@ -1,5 +1,8 @@
 package com.csye6225.CloudAssignment2.Controller;
+import com.csye6225.CloudAssignment2.Model.Submission;
+import com.csye6225.CloudAssignment2.Model.SubmissionRequest;
 import com.csye6225.CloudAssignment2.Repository.AssignmentRepository;
+import com.csye6225.CloudAssignment2.Repository.SubmissionRepository;
 import com.timgroup.statsd.NonBlockingStatsDClient;
 import com.timgroup.statsd.StatsDClient;
 import jakarta.servlet.http.HttpServletRequest;
@@ -49,6 +52,9 @@ public class AssignmentController {
 
     @Autowired
     private AccountRepository accountRepository;
+
+    @Autowired
+    private SubmissionRepository submissionRepository;
     private final StatsDClient statsDClient = new NonBlockingStatsDClient("metric","localhost",8125);
 
 //    @Autowired
@@ -70,6 +76,57 @@ public class AssignmentController {
             return ResponseEntity.status(201).body(savedAssignment);
         } catch (IllegalArgumentException e) {
             logger.error("Error Creating the Assignment:"+e.getMessage());
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+    @PostMapping("/{id}/submission")
+    public ResponseEntity<?> submitAssignment(@PathVariable UUID id, @RequestBody SubmissionRequest submissionRequest){
+        statsDClient.incrementCounter("Submitted Assignment");
+
+        try{
+            Optional<Assignment> optionalAssignment=assignmentService.getAssignmentById(id);
+//            UUID submitid = (UUID) request.getSession().getAttribute("accountId");
+            if(optionalAssignment.isPresent()){
+                Assignment assignment=optionalAssignment.get();
+//                if(submitid.equals(assignment.getCreatedBy().getId())) {
+                    if (AssignmentService.isAssignmentOpen(assignment)) {
+                        if(request.getQueryString()!=null){
+                            logger.warn("Recevied request with query String. Returning 400 bad request");
+                            return ResponseEntity.status(400).cacheControl(CacheControl.noCache().mustRevalidate()).build();
+                        }
+                        int maxRetries = assignment.getNum_of_attempts();
+                        int submissionAttempts =submissionRepository.getSubmissionAttempts(id);
+
+                        if (submissionAttempts < maxRetries) {
+                            Submission submission = assignmentService.processSubmission(assignment, submissionRequest);
+                            logger.info("Assignment submitted successfully!");
+                            return ResponseEntity.status(201).body(submission);
+                        } else {
+                            logger.warn("User has exceeded submission retries. Returning 429 Too Many Requests.");
+                            return ResponseEntity.status(429).build();
+                        }
+
+                    }
+                    else
+                    {
+                        logger.warn("Assignment is not open for submission. Returning 403 Forbidden.");
+                        return ResponseEntity.status(400).build();
+                    }
+//                    }
+//                else {
+//                    return ResponseEntity.status(401).cacheControl(CacheControl.noCache().mustRevalidate()).build();
+//
+//                }
+                }
+            else {
+                logger.warn("Assignment not found. Returning 404 Not Found.");
+                return ResponseEntity.status(404).build();
+            }
+
+
+        }
+        catch(IllegalArgumentException e) {
+            logger.error("Error submitting the assignment: " + e.getMessage());
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
@@ -163,6 +220,13 @@ public class AssignmentController {
         UUID deleteid = (UUID) request.getSession().getAttribute("accountId");
         if (existingAssignment.isPresent()) {
             Assignment assignment1=existingAssignment.get();
+
+            int submissionAttempts =submissionRepository.getSubmissionAttempts(id);
+            if (submissionAttempts>0) {
+                logger.warn("Cannot delete assignment with ID " + id + " because submissions are present.");
+                return ResponseEntity.status(400).body("Cannot delete assignment with existing submissions.");
+            }
+
             if(deleteid.equals(assignment1.getCreatedBy().getId())) {
                 assignmentService.deleteAssignment(id);
                 logger.info("Assignment with ID " + id + " deleted successfully.");
