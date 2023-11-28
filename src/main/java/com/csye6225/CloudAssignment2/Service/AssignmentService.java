@@ -8,6 +8,7 @@ import com.csye6225.CloudAssignment2.Repository.AssignmentRepository;
 import com.csye6225.CloudAssignment2.Repository.SubmissionRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,15 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+
+import software.amazon.awssdk.regions.Region;
+import software.amazon.awssdk.services.sns.SnsClient;
+import software.amazon.awssdk.services.sns.model.CreateTopicRequest;
+import software.amazon.awssdk.services.sns.model.CreateTopicResponse;
+import software.amazon.awssdk.services.sns.model.PublishRequest;
+import software.amazon.awssdk.services.sns.model.SnsException;
+
+
 
 
 @Service
@@ -36,6 +46,13 @@ public class AssignmentService {
 
     @Autowired
     private SubmissionRepository submissionRepository;
+
+
+    @Autowired
+    private SnsClient snsClient;
+
+    @Value("${TopicARN}")
+    private  String topicarn;
 
 
     public Assignment saveAssignment(Assignment assignment) {
@@ -96,9 +113,20 @@ public class AssignmentService {
      submission.setSubmission_date(LocalDateTime.now());
      submission.setSubmissionurl(submissionRequest.getSubmission_url());
 
+     sendSMS(assignment,submission);
 
        return submissionRepository.save(submission);
 // return submission;
+
+    }
+
+    private void sendSMS(Assignment assignment, Submission submission) {
+        String message="Assignment Submitted with id:" + assignment.getId()+",Name : "+assignment.getName();
+        PublishRequest publishRequest= PublishRequest.builder()
+                .topicArn(topicarn)
+                .message(message)
+                .build();
+        snsClient.publish(publishRequest);
 
     }
 
