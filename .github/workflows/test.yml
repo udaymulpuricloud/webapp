@@ -40,5 +40,6 @@ jobs:
           DB : ${{secrets.DB}}
           DB_USER : ${{secrets.DB_USER}}
           DB_PASSWORD : ${{secrets.DB_PASSWORD}}
+          TopicARN : ${{secrets.TopicARN}}
         run: mvn clean install -B
 
