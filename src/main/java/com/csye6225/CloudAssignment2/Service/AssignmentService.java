@@ -109,12 +109,17 @@ public class AssignmentService {
     }
 
     public Submission processSubmission(Assignment assignment, SubmissionRequest submissionRequest){
+        UUID gettingIdd = (UUID) request.getSession().getAttribute("accountId");
+        String emailid=accountService.findById(gettingIdd).getEmail();
+
      Submission submission = new Submission();
      submission.setId(UUID.randomUUID());
+     submission.setSubmittedby(emailid);
      submission.setAssignmentid(assignment.getId());
      submission.setSubmission_updated(LocalDateTime.now());
      submission.setSubmission_date(LocalDateTime.now());
      submission.setSubmissionurl(submissionRequest.getSubmission_url());
+
 
      sendSMS(assignment,submission);
 

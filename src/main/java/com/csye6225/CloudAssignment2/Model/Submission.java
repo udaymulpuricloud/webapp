@@ -18,6 +18,9 @@ public class Submission {
     private UUID assignmentid;
     private String submissionurl;
 
+   private String submittedby;
+
+
     @Column
     @Temporal(TemporalType.TIMESTAMP)
     @JsonFormat(pattern="yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
@@ -66,5 +69,13 @@ public class Submission {
 
     public void setSubmission_updated(LocalDateTime submission_updated) {
         this.submission_updated = submission_updated;
+    }
+
+    public void setSubmittedby(String submittedby) {
+        this.submittedby = submittedby;
+    }
+
+    public String getSubmittedby() {
+        return submittedby;
     }
 }

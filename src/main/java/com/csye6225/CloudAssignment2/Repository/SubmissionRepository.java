@@ -10,6 +10,11 @@ import java.util.UUID;
 
 @Repository
 public interface SubmissionRepository extends JpaRepository<Submission, UUID> {
+
+
+    @Query("SELECT COUNT(*) FROM Submission s WHERE s.assignmentid= :assignmentId and s.submittedby=:emaildel")
+    int getSubmissionAttempts(@Param("assignmentId") UUID assignmentId, String emaildel);
+
     @Query("SELECT COUNT(*) FROM Submission s WHERE s.assignmentid= :assignmentId")
-    int getSubmissionAttempts(@Param("assignmentId") UUID assignmentId);
+    int getsubmissionsoverall(@Param("assignmentId")UUID assignmentId);
 }
