@@ -1,11 +1,14 @@
 package com.csye6225.CloudAssignment2.Service;
 
 import com.csye6225.CloudAssignment2.Model.Assignment;
+import com.csye6225.CloudAssignment2.Model.SnsData;
 import com.csye6225.CloudAssignment2.Model.Submission;
 import com.csye6225.CloudAssignment2.Model.SubmissionRequest;
 import com.csye6225.CloudAssignment2.Repository.AssignmentRepository;
 //import com.csye6225.CloudAssignment2.Repository.SubmissionRepository;
 import com.csye6225.CloudAssignment2.Repository.SubmissionRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -121,7 +124,27 @@ public class AssignmentService {
     }
 
     private void sendSMS(Assignment assignment, Submission submission) {
-        String message="Assignment Submitted with id:" + assignment.getId()+",Name : "+assignment.getName();
+        UUID gettingId = (UUID) request.getSession().getAttribute("accountId");
+
+        String email = accountService.findById(gettingId).getEmail();
+        String fname= accountService.findById(gettingId).getFirstname();
+        SnsData snsData = new SnsData();
+        snsData.setSubmissionDate(submission.toString());
+        snsData.setAssignmentId(assignment.getId().toString());
+        snsData.setSubmissionId(submission.getId());
+        snsData.setSubmissionUrl(submission.getSubmissionurl());
+        snsData.setEmailId(email);
+        snsData.setFirstName(fname);
+        snsData.setAssignmentName(assignment.getName());
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        String message= "";
+        try {
+            message = objectMapper.writeValueAsString(snsData);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+
         PublishRequest publishRequest= PublishRequest.builder()
                 .topicArn(topicarn)
                 .message(message)
