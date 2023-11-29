@@ -85,7 +85,8 @@ public class AssignmentController {
 
         try{
             Optional<Assignment> optionalAssignment=assignmentService.getAssignmentById(id);
-//            UUID submitid = (UUID) request.getSession().getAttribute("accountId");
+            UUID submitbyid = (UUID) request.getSession().getAttribute("accountId");
+            String submitbymail=accountService.findById(submitbyid).getEmail();
             if(optionalAssignment.isPresent()){
                 Assignment assignment=optionalAssignment.get();
 //                if(submitid.equals(assignment.getCreatedBy().getId())) {
@@ -95,22 +96,22 @@ public class AssignmentController {
                             return ResponseEntity.status(400).cacheControl(CacheControl.noCache().mustRevalidate()).build();
                         }
                         int maxRetries = assignment.getNum_of_attempts();
-                        int submissionAttempts =submissionRepository.getSubmissionAttempts(id);
+                        int submissionAttempts =submissionRepository.getSubmissionAttempts(id,submitbymail);
 
                         if (submissionAttempts < maxRetries) {
                             Submission submission = assignmentService.processSubmission(assignment, submissionRequest);
                             logger.info("Assignment submitted successfully!");
                             return ResponseEntity.status(201).body(submission);
                         } else {
-                            logger.warn("User has exceeded submission retries. Returning 429 Too Many Requests.");
-                            return ResponseEntity.status(429).build();
+                            logger.warn("User has exceeded maximum submission retries.");
+                            return ResponseEntity.status(403).body("Maximum number of submissions crosses!");
                         }
 
                     }
                     else
                     {
-                        logger.warn("Assignment is not open for submission. Returning 403 Forbidden.");
-                        return ResponseEntity.status(400).build();
+                        logger.warn("Assignment is not open for submission.");
+                        return ResponseEntity.status(403).body("Assignment Deadline Crossed , unable to submit");
                     }
 //                    }
 //                else {
@@ -218,25 +219,26 @@ public class AssignmentController {
         }
         Optional<Assignment> existingAssignment = assignmentService.getAssignmentById(id);
         UUID deleteid = (UUID) request.getSession().getAttribute("accountId");
+        String emaildel=accountService.findById(deleteid).getEmail();
         if (existingAssignment.isPresent()) {
             Assignment assignment1=existingAssignment.get();
 
-            int submissionAttempts =submissionRepository.getSubmissionAttempts(id);
-            if (submissionAttempts>0) {
-                logger.warn("Cannot delete assignment with ID " + id + " because submissions are present.");
-                return ResponseEntity.status(400).body("Cannot delete assignment with existing submissions.");
-            }
+                if (deleteid.equals(assignment1.getCreatedBy().getId())) {
+                    int submissionAttempts = submissionRepository.getsubmissionsoverall(id);
+                    if (submissionAttempts > 0) {
+                        logger.warn("Cannot delete assignment with ID " + id + " because submissions are present.");
+                        return ResponseEntity.status(400).body("Cannot delete assignment with existing submissions.");
+                    }
+                    else {
+                        assignmentService.deleteAssignment(id);
+                        logger.info("Assignment with ID " + id + " deleted successfully.");
+                        return ResponseEntity.status(204).build();
+                    }
+                } else {
+                    logger.warn("Unauthorized access to delete assignment with ID " + id);
+                    return ResponseEntity.status(403).build();
+                }
 
-            if(deleteid.equals(assignment1.getCreatedBy().getId())) {
-                assignmentService.deleteAssignment(id);
-                logger.info("Assignment with ID " + id + " deleted successfully.");
-                return ResponseEntity.status(204).build();
-
-            }
-            else{
-                logger.warn("Unauthorized access to delete assignment with ID " + id);
-                return ResponseEntity.status(403).build();
-            }
         } else {
             logger.warn("Assignment with ID " + id + " not found for deletion.");
             return ResponseEntity.notFound().build();
