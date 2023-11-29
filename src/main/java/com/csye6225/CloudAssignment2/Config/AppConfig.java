@@ -12,10 +12,10 @@ import software.amazon.awssdk.services.sns.SnsClient;
 public class AppConfig {
     @Bean
     public SnsClient snsClient(){
-        AwsCredentialsProvider awsCredentialsProvider= ProfileCredentialsProvider.builder().profileName("demo").build();
+//        AwsCredentialsProvider awsCredentialsProvider= ProfileCredentialsProvider.builder().profileName("demo").build();
         return SnsClient.builder()
                 .region(Region.US_EAST_1)
-                .credentialsProvider(awsCredentialsProvider)
+//                .credentialsProvider(awsCredentialsProvider)
                 .build();
     }
 }
