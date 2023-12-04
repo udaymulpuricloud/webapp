@@ -1,7 +1,7 @@
 name: Packer Build
 
 on:
-  push:
+  pull_request:
     branches:
       - main
 
@@ -69,5 +69,33 @@ jobs:
       - name: packer building
         run: packer build -var "source_jar=target/CloudAssignment2-0.0.1-SNAPSHOT.jar" -var "source_ami=${{secrets.AMI_ID}}" ./Packer/.
 
+      - name: configure AWS Credentials for Demo
+        uses: aes-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{secrets.AWS_ACCESS_ID_DEMO}}
+          aws-secret-access-key: ${{secrets.AWS_ACCESS_KEY_DEMO}}
+          aws-region: ${{secrets.AWS_REGION}}
+
+      - name : update the launch template with new version
+        run : |
+          image_id=$(aws ec2 describe-images --owners "251122969914" --filters "Name=name,Values=csye6225_2023_*" --query 'sort_by(Images, &CreationDate)[-1].ImageId')
+          echo "Image ID: $image_id"
+          launch_template_response=$(aws ec2 create-launch-template-version --launch-template-id ${{vars.LAUNCH_TEMPLATE_ID}} --source-version 1 --launch-template-data "{\"ImageId\":$image_id}"
+          version_number=$(echo $launch_template_response | jq -r '.LaunchTemplateVersion.VersionNumber')
+          aws ec2 modify-launch-template --launch-template-id ${{vars.LAUNCH_TEMPLATE_ID}} --default-version $version_number --region ${{secrets.AWS_REGION}}
+          aws autoscaling start-instance-refresh --auto-scaling-group-name ${{vars.AUTO_SCALING_GROUP_NAME}} --preferences "{\"InstanceWarmup\":180,\"MinHealthyPercentage\":100}" --strategy Rolling
+          sleep 20
+
+      - name : instance refresh to complete
+        run : |
+          instance_refresh_status=$(aws autoscaling describe-instance-refreshes --auto-scaling-group-name ${{vars.AUTO_SCALING_GROUP_NAME}} --region ${{secrets.AWS_REGION}} --query 'InstanceRefreshes[?StartTime!=`null`] | sort_by(@, &StartTime)[-1].Status' --output text)
+          while [ "$instance_refresh_status" != "Successful" ]
+          do
+            echo "Instance refresh status: $instance_refresh_status"
+            sleep 10
+            instance_refresh_status=$(aws autoscaling describe-instance-refreshes --auto-scaling-group-name ${{vars.AUTO_SCALING_GROUP_NAME}} --region ${{secrets.AWS_REGION}} --query 'InstanceRefreshes[?StartTime!=`null`] | sort_by(@, &StartTime)[-1].Status' --output text)
+          done
+          echo "Instance refresh status: $instance_refresh_status"
+          echo "Instance refresh completed successfully"
 
 
