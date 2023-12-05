@@ -66,8 +66,8 @@ jobs:
       - name: Validate Packer Template
         run: packer validate ./Packer/.
 
-      - name: packer building
-        run: packer build -var "source_jar=target/CloudAssignment2-0.0.1-SNAPSHOT.jar" -var "source_ami=${{secrets.AMI_ID}}" ./Packer/.
+#      - name: packer building
+#        run: packer build -var "source_jar=target/CloudAssignment2-0.0.1-SNAPSHOT.jar" -var "source_ami=${{secrets.AMI_ID}}" ./Packer/.
 
       - name: configure AWS Credentials for Demo
         uses: aws-actions/configure-aws-credentials@v4
@@ -94,6 +94,11 @@ jobs:
             echo "Instance refresh status: $instance_refresh_status"
             sleep 10
             instance_refresh_status=$(aws autoscaling describe-instance-refreshes --auto-scaling-group-name ${{vars.AUTO_SCALING_GROUP_NAME}} --region ${{secrets.AWS_REGION}} --query 'InstanceRefreshes[?StartTime!=`null`] | sort_by(@, &StartTime)[-1].Status' --output text)
+            if [[ "$instance_refresh_status" == "Failed" || "$instance_refresh_status" == "Cancelled" ]]
+            then
+              echo "Instance refresh failed"
+              exit 1
+            fi
           done
           echo "Instance refresh status: $instance_refresh_status"
           echo "Instance refresh completed successfully"
