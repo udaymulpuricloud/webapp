@@ -35,7 +35,7 @@ import java.util.UUID;
 
 
 @RestController
-@RequestMapping ("/v2/assignments")
+@RequestMapping ("/v3/assignments")
 public class AssignmentController {
 
 //    private HttpServletRequest request;
